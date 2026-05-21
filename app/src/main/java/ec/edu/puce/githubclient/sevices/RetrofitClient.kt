@@ -20,7 +20,7 @@ object RetrofitClient {
             println("token: $token")
 
             val request = chain.request().newBuilder()
-                .addHeader( name = "Authotization", value = "Bearer $token")
+                .addHeader( name = "Authorization", value = "Bearer $token")
                 .build()
 
             chain.proceed(request)

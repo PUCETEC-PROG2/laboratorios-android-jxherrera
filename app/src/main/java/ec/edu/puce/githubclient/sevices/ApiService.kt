@@ -10,9 +10,8 @@ interface ApiService {
     suspend fun getRepositories (
         @Query(value = "sort") created: String = "created",
         @Query(value = "direction") direction: String = "desc",
-        @Query(value = "afiliation") afiliation: String = "owner",
+        @Query(value = "affiliation") affiliation: String = "owner",
         @Query(value = "per_page") perPage: Int = 100,
         @Query(value = "t") t: String = "${System.currentTimeMillis()}",
     ) : List<Repository>
 }
-
