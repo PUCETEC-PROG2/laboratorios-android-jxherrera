@@ -81,14 +81,14 @@ fun RepoItem (
 @Composable
 fun RepoItemPreview () {
     val repository = Repository(
-        id = "1234",
+        id = "12345",
         name = "Repositorio de android",
         description = "Repositorio paralelo 1471",
         language = "Kotlin",
         owner = GithubUser(
             id = "123",
             login = "jxherrera",
-            avatarUrl = "https://www.google.com/url?sa=t&source=web&rct=j&url=https%3A%2F%2Fes.wikipedia.org%2Fwiki%2FBarcelona_Sporting_Club&ved=0CBYQjRxqFwoTCKDR55rZyJQDFQAAAAAdAAAAABAG&opi=89978449"
+            avatarUrl = "sdvdfgdfhdfh"
         )
     )
     RepoItem(repository)
