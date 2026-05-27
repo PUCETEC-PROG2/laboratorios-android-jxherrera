@@ -40,7 +40,7 @@ fun RepoItem (
         ) {
             AsyncImage(
                 model = repository.owner.avatarUrl,
-                contentDescription = "Imagen de $repository.name",
+                contentDescription = "Imagen de ${repository.name}",
                 modifier = Modifier.size(68.dp),
                 contentScale = ContentScale.Crop
             )
@@ -80,15 +80,15 @@ fun RepoItem (
 @Preview(showBackground = true)
 @Composable
 fun RepoItemPreview () {
-    val repository = Repository(
+    val repository= Repository(
         id = "12345",
-        name = "Repositorio de android",
-        description = "Repositorio paralelo 1471",
+        name = "Repositorio de Android",
+        description = "Repositorio de Android paralelo 1471",
         language = "Kotlin",
-        owner = GithubUser(
+        owner = GithubUser (
             id = "123",
             login = "jxherrera",
-            avatarUrl = "sdvdfgdfhdfh"
+            avatarUrl = "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"
         )
     )
     RepoItem(repository)
