@@ -88,7 +88,7 @@ fun RepoItemPreview () {
         owner = GithubUser (
             id = "123",
             login = "jxherrera",
-            avatarUrl = "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"
+            avatarUrl = "XXXXXX"
         )
     )
     RepoItem(repository)
