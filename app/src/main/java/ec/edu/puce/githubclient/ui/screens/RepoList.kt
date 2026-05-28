@@ -29,7 +29,8 @@ import ec.edu.puce.githubclient.viewmodels.RepoListViewModel
 @Composable
 fun RepoList(
     modifier: Modifier = Modifier,
-    viewModel: RepoListViewModel = viewModel()
+    viewModel: RepoListViewModel = viewModel(),
+    onNavigateToForm: () -> Unit
 ) {
 
     val repos by viewModel.repos.collectAsState()
@@ -39,7 +40,9 @@ fun RepoList(
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {},
+                onClick = {
+                    onNavigateToForm()
+                },
                 shape = CircleShape,
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -93,6 +96,8 @@ fun RepoList(
 @Composable
 fun RepoListPreview() {
     GithubClientTheme {
-        RepoList()
+        RepoList(
+            onNavigateToForm = {}
+        )
     }
 }
