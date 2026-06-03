@@ -8,7 +8,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -30,27 +31,33 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import ec.edu.puce.githubclient.models.Repository
 import ec.edu.puce.githubclient.ui.theme.GithubClientTheme
 import ec.edu.puce.githubclient.viewmodels.RepoFormViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RepoForm(
+    repository: Repository? = null,
     onBackClick: () -> Unit = {},
     onSaveSuccess: () -> Unit = {},
     viewModel: RepoFormViewModel = viewModel()
 ) {
-
+    val isEditing = repository != null
     val isLoading by viewModel.isLoading.collectAsState()
     val errorMsg by viewModel.errorMsg.collectAsState()
     val inSuccess by viewModel.inSuccess.collectAsState()
 
-    var name by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
+    var name by remember(repository) { mutableStateOf(repository?.name ?: "") }
+    var description by remember(repository) { mutableStateOf(repository?.description ?: "") }
+
+    LaunchedEffect(repository) {
+        viewModel.resetError()
+        viewModel.resetSuccess()
+    }
 
     LaunchedEffect(inSuccess) {
         if (inSuccess) {
@@ -62,20 +69,16 @@ fun RepoForm(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Crear Repositorio") },
-
+                title = { Text(if (isEditing) "Editar Repositorio" else "Crear Repositorio") },
                 navigationIcon = {
-                    IconButton(
-                        onClick = onBackClick
-                    ) {
+                    IconButton(onClick = onBackClick) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Regresar",
                             tint = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     }
                 },
-
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -83,7 +86,6 @@ fun RepoForm(
             )
         }
     ) { innerPadding ->
-
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -92,24 +94,12 @@ fun RepoForm(
             verticalArrangement = Arrangement.Center
         ) {
             if (isLoading) {
-                CircularProgressIndicator(
-                    Modifier.align(Alignment.CenterHorizontally)
-                )
-            } else if (!errorMsg.isNullOrBlank()) {
-                Text(
-                    text = errorMsg!!,
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
+                CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
             } else {
                 OutlinedTextField(
                     value = name,
-                    onValueChange = {
-                        name = it
-                    },
-                    label = {
-                        Text("Nombre del repositorio")
-                    },
+                    onValueChange = { name = it },
+                    label = { Text("Nombre del repositorio") },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
@@ -118,12 +108,8 @@ fun RepoForm(
 
                 OutlinedTextField(
                     value = description,
-                    onValueChange = {
-                        description = it
-                    },
-                    label = {
-                        Text("Descripción del repositorio")
-                    },
+                    onValueChange = { description = it },
+                    label = { Text("Descripción del repositorio") },
                     modifier = Modifier.fillMaxWidth(),
                     minLines = 5
                 )
@@ -132,30 +118,40 @@ fun RepoForm(
 
                 Button(
                     onClick = {
-                        viewModel.createRepo(name, description)
+                        if (isEditing) {
+                            viewModel.updateRepo(
+                                repository!!.owner.login,
+                                repository.name,
+                                name,
+                                description
+                            )
+                        } else {
+                            viewModel.createRepo(name, description)
+                        }
                     },
                     modifier = Modifier.fillMaxWidth(),
-                    enabled = !isLoading
+                    enabled = !isLoading && name.isNotBlank()
                 ) {
-
                     Icon(
-                        imageVector = Icons.Default.Send,
-                        contentDescription = "Guardar"
+                        imageVector = if (isEditing) Icons.Default.Edit else Icons.Default.Send,
+                        contentDescription = if (isEditing) "Actualizar" else "Crear"
                     )
-
                     Spacer(modifier = Modifier.width(16.dp))
-
                     Text(
-                        if (isLoading) "Guardando..." else "Guardar"
+                        if (isLoading) {
+                            if (isEditing) "Actualizando..." else "Creando..."
+                        } else {
+                            if (isEditing) { "Actualizar" } else { "Crear" }
+                        }
                     )
                 }
 
                 errorMsg?.let {
                     Spacer(modifier = Modifier.height(16.dp))
-
                     Text(
                         text = it,
-                        color = MaterialTheme.colorScheme.error
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
                     )
                 }
             }

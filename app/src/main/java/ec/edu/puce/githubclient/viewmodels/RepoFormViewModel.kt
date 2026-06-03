@@ -37,10 +37,40 @@ class RepoFormViewModel: ViewModel() {
         }
     }
 
+    fun updateRepo(owner: String, repoName: String, name: String, description: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _errorMsg.value = null
+            try {
+                val repoBody = RepositoryPayload(name, description)
+                RetrofitClient.apiService.updateRepository(owner, repoName, repoBody)
+                _inSuccess.value = true
+            } catch (e: Exception) {
+                _errorMsg.value = "Error al actualizar: ${e.localizedMessage}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun deleteRepo(login: String, name: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _errorMsg.value = null
+            try {
+                RetrofitClient.apiService.deleteRepository(login, name)
+                _inSuccess.value = true
+            } catch (e: Exception) {
+                _errorMsg.value = "Error al cargar: ${e.localizedMessage}"
+            }
+        }
+    }
+
     fun resetSuccess() {
-        _isLoading.value = false
+        _inSuccess.value = false
     }
     fun resetError() {
         _errorMsg.value = null
     }
+
 }

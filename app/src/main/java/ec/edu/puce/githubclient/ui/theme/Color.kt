@@ -10,5 +10,7 @@ val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
-val PuceBlue = Color(0xFF6F77E3)
-val PuceTeel = Color(0xFF734A85)
+val PuceBlue = Color(0xFF198A44)
+val PuceTeel = Color(0xFF198A7D)
+
+val Pucefree = Color(0xFF268A19)

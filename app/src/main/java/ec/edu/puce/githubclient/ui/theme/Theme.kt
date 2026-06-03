@@ -14,15 +14,15 @@ import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
     primary = PuceTeel,
-    secondary = PurpleGrey80,
+    secondary = Pucefree,
     tertiary = PuceBlue,
     primaryContainer = PuceTeel,
     onPrimaryContainer = Color.White
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = PuceTeel,
-    secondary = PurpleGrey40,
+    primary = Pucefree,
+    secondary = PuceTeel,
     tertiary = PuceBlue,
     primaryContainer = PuceTeel,
     onPrimaryContainer = Color.White
